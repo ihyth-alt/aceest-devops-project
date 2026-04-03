@@ -1,6 +1,6 @@
 # ACEest Fitness & Gym — DevOps CI/CD Pipeline
 
-> **Course:** Introduction to DevOps (CSIZG514 / SEZG514 / SEUSZG514) — S2-25  
+> **Course:** Introduction to DevOps (CSIZG514 / SEZG514 / SEUSZG514) — S2
 > **Assignment:** Implementing Automated CI/CD Pipelines for ACEest Fitness & Gym
 
 ---
