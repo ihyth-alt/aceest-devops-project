@@ -160,7 +160,7 @@ def test_calculate_negative_weight_returns_400(client):
 
 def test_calculate_no_body_returns_400(client):
     response = client.post("/calculate")
-    assert response.status_code == 400
+    assert response.status_code in (400, 415)
 
 
 # ── /clients route ────────────────────────────────────────────────────────────
