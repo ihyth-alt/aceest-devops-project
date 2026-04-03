@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ACEest Fitness & Gym — DevOps CI/CD Pipeline
 
 > **Course:** Introduction to DevOps (CSIZG514 / SEZG514 / SEUSZG514) — S2-25  
@@ -174,3 +175,7 @@ docker:  Dockerfile or container change
 ci:      GitHub Actions or Jenkins update
 docs:    README or documentation update
 ```
+=======
+# aceest-devops-project
+Devops assessment
+>>>>>>> ddef4ff70c30fccad4f63714d3d6217d4d843c5d
