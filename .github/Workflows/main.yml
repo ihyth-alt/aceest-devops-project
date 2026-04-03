@@ -1,0 +1,39 @@
+name: ACEest CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 app.py --max-line-length=120 --ignore=E501
+
+      - name: Run Pytest tests
+        run: |
+          pytest test_app.py -v
+
+      - name: Build Docker image
+        run: |
+          docker build -t aceest-fitness-app .
