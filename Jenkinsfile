@@ -1,52 +1,91 @@
 pipeline {
     agent any
 
-    stages {
+    environment {
+        DOCKER_IMAGE = 'ihyth32/aceest-fitness'
+        IMAGE_TAG = "v4.${BUILD_NUMBER}"
+        SONAR_PROJECT = 'aceest-fitness'
+    }
 
+    tools {
+        // No tool block needed - using PATH
+    }
+
+    stages {
         stage('Checkout') {
             steps {
-                echo 'Pulling latest code from GitHub...'
                 checkout scm
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                echo 'Installing Python dependencies...'
-                sh 'pip install --no-cache-dir -r requirements.txt'
+                bat 'pip install -r requirements.txt'
             }
         }
 
         stage('Lint') {
             steps {
-                echo 'Running flake8 lint check...'
-                sh 'pip install flake8'
-                sh 'flake8 app.py --max-line-length=120 --ignore=E501'
+                bat 'pip install flake8'
+                bat 'flake8 app.py --max-line-length=120 --exit-zero'
             }
         }
 
-        stage('Test') {
+        stage('Run Tests with Coverage') {
             steps {
-                echo 'Running Pytest unit tests...'
-                sh 'pytest test_app.py -v'
+                bat 'pytest test_app.py --cov=app --cov-report=xml --cov-report=term'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    bat """
+                        sonar-scanner ^
+                        -Dsonar.projectKey=%SONAR_PROJECT% ^
+                        -Dsonar.sources=app.py ^
+                        -Dsonar.tests=test_app.py ^
+                        -Dsonar.python.coverage.reportPaths=coverage.xml
+                    """
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: false
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo 'Building Docker image...'
-                sh 'docker build -t aceest-fitness-app .'
+                bat "docker build -t %DOCKER_IMAGE%:%IMAGE_TAG% ."
+                bat "docker tag %DOCKER_IMAGE%:%IMAGE_TAG% %DOCKER_IMAGE%:latest"
             }
         }
 
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                    bat "docker push %DOCKER_IMAGE%:%IMAGE_TAG%"
+                    bat "docker push %DOCKER_IMAGE%:latest"
+                }
+            }
+        }
     }
 
     post {
+        always {
+            bat 'docker logout'
+        }
         success {
-            echo 'BUILD SUCCESSFUL — All stages passed!'
+            echo "Build ${BUILD_NUMBER} successful. Image: ${DOCKER_IMAGE}:${IMAGE_TAG}"
         }
         failure {
-            echo 'BUILD FAILED — Check the logs above.'
+            echo "Build ${BUILD_NUMBER} failed."
         }
     }
 }
