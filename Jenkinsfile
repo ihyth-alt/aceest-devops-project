@@ -7,10 +7,6 @@ pipeline {
         SONAR_PROJECT = 'aceest-fitness'
     }
 
-    tools {
-        // No tool block needed - using PATH
-    }
-
     stages {
         stage('Checkout') {
             steps {
