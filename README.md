@@ -1,276 +1,187 @@
-# ACEest Fitness & Gym — DevOps CI/CD Pipeline
+# ACEest Fitness & Gym — DevOps CI/CD Pipeline (Assignment 2)
 
-> **Course:** Introduction to DevOps (CSIZG514 / SEZG514 / SEUSZG514) — S2-25
-> **Assignment:** Implementing Automated CI/CD Pipelines for ACEest Fitness & Gym
+> **Course:** Introduction to DevOps (CSIZG514 / SEZG514) — S2-25
 > **Repository:** https://github.com/ihyth-alt/aceest-devops-project
+> **Docker Hub:** https://hub.docker.com/r/ihyth32/aceest-fitness
 
 ---
 
-## Project Overview
+## 🌐 Live Public Endpoint
 
-ACEest Fitness & Gym is a Flask-based REST API that manages fitness programs,
-client profiles, and calorie calculations. This project demonstrates a complete
-DevOps lifecycle — from local development through version control, unit testing,
-containerisation, Jenkins BUILD integration, and a fully automated GitHub Actions
-CI/CD pipeline.
+### **http://136.110.151.78**
 
----
+| Strategy | URL |
+|---|---|
+| Rolling Update (default) | http://136.110.151.78/ |
+| UI (rolling) | http://136.110.151.78/ui |
+| Blue-Green | http://136.110.151.78/blue-green |
+| Canary Release | http://136.110.151.78/canary |
+| A/B Testing | http://136.110.151.78/ab-test |
+| Shadow Deployment | http://136.110.151.78/shadow |
 
-## Version History (VCS Strategy)
-
-This repository tracks the full evolution of the ACEest application using
-descriptive Git commits. Each version was committed separately to demonstrate
-industry-standard version control practices.
-
-| Version | Description |
-|---------|-------------|
-| v1.0 | Basic program display with tkinter UI |
-| v1.1 | Added client profile inputs and calorie calculator |
-| v1.1.2 | Added CSV export and matplotlib progress chart |
-| v2.0.1 | Added SQLite database for client storage |
-| v2.1.2 | Added load client and save progress features |
-| v2.2.1 | Added progress chart visualisation |
-| v2.2.4 | Enhanced UI and additional features |
-| v3.0.1 | Added login system and workout tracking |
-| v3.1.2 | Added PDF report generation and membership billing |
-| v3.2.4 | Full featured app with metrics and exercise tracking |
-| v4.0 | **Migrated to Flask REST API for DevOps pipeline** |
+Each path serves the HTML UI with a "Served by:" badge identifying which Kubernetes deployment handled the request. Routed via GCE Ingress on a 4-node GKE cluster in asia-south1 (Mumbai).
 
 ---
 
-## Project Structure
+## Submission Index
+
+| Deliverable | Location |
+|---|---|
+| Flask application + UI | `app.py`, `templates/`, `static/` |
+| Pytest test suite (35 tests, 88% coverage) | `test_app.py`, `pytest.ini` |
+| Jenkinsfile (8-stage pipeline) | `Jenkinsfile` |
+| Dockerfile | `Dockerfile` |
+| SonarQube configuration | `sonar-project.properties` |
+| Kubernetes manifests — Minikube (local) | `k8s/` |
+| Kubernetes manifests — GKE (cloud) | `k8s-cloud/` |
+| Rollback + operational scripts | `scripts/` |
+| Architecture, challenges, outcomes report | `docs/report.docx` |
+| Live endpoint URLs | `docs/endpoints.md` |
+| Pipeline + dashboard screenshots | `docs/screenshots/` |
+
+---
+
+## CI/CD Pipeline Stages (Jenkinsfile)
+
+1. **Checkout** — Pulls main branch from GitHub via `github-creds`
+2. **Install Dependencies** — `pip install -r requirements.txt`
+3. **Lint** — `flake8 app.py --max-line-length=120`
+4. **Run Tests with Coverage** — `pytest --cov=app --cov-report=xml` (35/35 passed, 88%)
+5. **SonarQube Analysis** — `sonar-scanner` uploads to local server
+6. **Quality Gate** — Webhook-driven, fails build if gate fails
+7. **Build Docker Image** — Tags `v4.${BUILD_NUMBER}` and `latest`
+8. **Push to Docker Hub** — Both tags published to public registry
+
+---
+
+## Deployment Strategies Implemented (GKE)
+
+### 1. Rolling Update — `k8s-cloud/01-rolling-update.yaml`
+Zero-downtime replacement with `maxSurge: 1`, `maxUnavailable: 0`.
+
+### 2. Blue-Green — `k8s-cloud/02-blue-green.yaml`
+Blue (`v4.0`) and Green (`latest`) run in parallel. Service selector switches color.
+
+### 3. Canary Release — `k8s-cloud/03-canary.yaml`
+Stable + canary pods with weighted traffic split via label-based service routing.
+
+### 4. A/B Testing — `k8s-cloud/04-ab-testing.yaml`
+Two versions behind one service for round-robin distribution.
+
+### 5. Shadow Deployment — `k8s-cloud/05-shadow.yaml`
+Production handles real traffic, shadow deployment runs latest image for parallel testing.
+
+### Ingress — `k8s-cloud/06-ingress.yaml`
+Single GCE HTTP(S) Load Balancer routes all 5 strategies through path-based rules on one public IP.
+
+### Rollback — `scripts/rollback.ps1`
+Wraps `kubectl rollout undo` with history display + status wait.
+
+---
+
+## Quality Metrics
+
+| Metric | Result |
+|---|---|
+| Tests passing | 35 / 35 |
+| Code coverage | 88.1% |
+| SonarQube quality gate | ✅ Passed |
+| Bugs / Vulnerabilities / Code Smells | 0 / 0 / 0 |
+| Reliability / Security / Maintainability | A / A / A |
+| Pipeline runtime | ~2.5 min |
+
+---
+
+## Architecture
 
 ```
-aceest-devops-project/
-├── app.py                          # Flask application (core REST API)
-├── requirements.txt                # Python dependencies
-├── test_app.py                     # Pytest unit test suite (35 tests)
-├── Dockerfile                      # Docker container definition
-├── Jenkinsfile                     # Jenkins BUILD pipeline definition
-├── README.md                       # This file
-└── .github/
-    └── workflows/
-        └── main.yml                # GitHub Actions CI/CD pipeline
+GitHub (main branch)
+        │
+        ▼ (poll SCM / webhook)
+Jenkins Pipeline
+        │
+        ├── pytest (35 tests, 88% cov)
+        ├── flake8 (lint)
+        ├── SonarQube (quality gate)
+        └── docker build + push → Docker Hub (ihyth32/aceest-fitness:v4.X)
+                │
+                ▼
+        GKE Cluster (asia-south1-b, 4 × e2-small)
+                │
+        9 Deployments × 5 strategies (rolling, blue/green, stable/canary, version-a/b, prod/shadow)
+                │
+                ▼
+        GCE Ingress → Public IP 136.110.151.78
+                │
+        Path-based routing: /, /blue-green, /canary, /ab-test, /shadow
 ```
 
 ---
 
-## Phase 1 — Flask Application
-
-The application exposes the following REST API endpoints:
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Health check — returns API status |
-| GET | `/programs` | Lists all available fitness programs |
-| GET | `/programs/<name>` | Returns workout and diet plan for a program |
-| POST | `/calculate` | Calculates estimated daily calories |
-| POST | `/clients` | Registers a new client |
-
-### Available Programs
-- **Fat Loss (FL)** — 22 kcal per kg body weight
-- **Muscle Gain (MG)** — 35 kcal per kg body weight
-- **Beginner (BG)** — 26 kcal per kg body weight
-
----
-
-## Phase 2 — Local Setup and Execution
+## Reproducing the Setup
 
 ### Prerequisites
+- Windows 11 (Intel VT-x enabled in BIOS)
+- Docker Desktop with WSL2
+- Java 21 (Adoptium Temurin)
 - Python 3.11+
-- pip
-- Docker (optional, for containerised run)
-- Git
+- Jenkins 2.561 + suggested plugins
+- SonarQube 9.9 LTS Community (Docker)
+- Minikube + kubectl (local development)
+- gcloud SDK + GKE auth plugin (cloud deployment)
+- Sonar Scanner CLI
 
-### Step 1 — Clone the repository
+### Quick start (local)
 ```bash
 git clone https://github.com/ihyth-alt/aceest-devops-project.git
 cd aceest-devops-project
-```
-
-### Step 2 — Install dependencies
-```bash
 pip install -r requirements.txt
-```
-
-### Step 3 — Run the Flask application
-```bash
+pytest test_app.py --cov=app
 python app.py
+# Open http://localhost:5000/ui
 ```
 
-The API will be available at: `http://localhost:5000`
-
-### Example API calls
-
-**Check API is running:**
+### Quick start (cloud)
 ```bash
-curl http://localhost:5000/
-```
+gcloud container clusters create aceest-cluster \
+  --num-nodes=4 --machine-type=e2-small \
+  --zone=asia-south1-b --release-channel=stable
 
-**Calculate calories:**
-```bash
-curl -X POST http://localhost:5000/calculate \
-  -H "Content-Type: application/json" \
-  -d "{\"program\": \"Fat Loss (FL)\", \"weight\": 70}"
-```
+gcloud container clusters get-credentials aceest-cluster --zone=asia-south1-b
 
-**Expected response:**
-```json
-{
-  "program": "Fat Loss (FL)",
-  "weight_kg": 70.0,
-  "estimated_calories": 1540,
-  "calorie_factor": 22
-}
+kubectl apply -f k8s-cloud/
+
+kubectl get ingress aceest-ingress
+# Wait 5–10 min for ADDRESS to populate
 ```
 
 ---
 
-## Phase 3 — Running Tests Manually
+## Key Challenges
 
-```bash
-pytest test_app.py -v
-```
+1. **WSL2 / VT-x disabled** — enabled Virtualisation in HP BIOS
+2. **Jenkins PATH** — Python and Sonar Scanner added to *System* PATH
+3. **PowerShell quoting** — wrapped sonar-scanner args in double quotes
+4. **SonarQube webhook** — added `host.docker.internal:8080` for cross-container access
+5. **GCP IP quota** — refactored from 5 LoadBalancers to 1 Ingress
+6. **GCE stockout** — switched zone from asia-south1-a to asia-south1-b
+7. **Image caching** — set `imagePullPolicy: Always` and force-deleted stale pods
 
-The test suite contains **35 unit tests** covering:
-- All API route responses (GET and POST)
-- Correct calorie calculations for all three programs
-- Input validation — missing fields, invalid programs, zero and negative weight
-- HTTP status code verification (200, 201, 400, 404, 415)
-- Data integrity checks on the PROGRAMS dictionary
-
-**Expected output:**
-```
-35 passed in 0.XX seconds
-```
+Full details in `docs/report.docx`.
 
 ---
 
-## Phase 4 — Docker Containerisation
+## Version History
 
-The Dockerfile uses `python:3.11-slim` for a minimal, secure image.
-
-### Build the Docker image
-```bash
-docker build -t aceest-fitness-app .
-```
-
-### Run the container
-```bash
-docker run -p 5000:5000 aceest-fitness-app
-```
-
-The app will be accessible at `http://localhost:5000`
-
-### Why Docker?
-Docker eliminates the "it works on my machine" problem by packaging the Flask
-application, its dependencies, and runtime environment into a single portable
-image. The same image runs identically on a developer's laptop, the Jenkins
-BUILD server, and any production environment.
+| Version | Description |
+|---|---|
+| v1.0 – v3.2.4 | Tkinter desktop iterations (Assignment 1) |
+| v4.0 | Migrated to Flask REST API for DevOps pipeline |
+| v4.5+ | Jenkins build numbers (auto-tagged on each pipeline run) |
+| v4.0-final | Final submission tag |
 
 ---
 
-## Phase 5 — Jenkins BUILD Integration
+## Author
 
-Jenkins is configured as a secondary quality gate that pulls code from GitHub
-and validates it in a clean, controlled build environment.
-
-### Jenkins Pipeline Stages (Jenkinsfile)
-
-| Stage | What it does |
-|-------|-------------|
-| Checkout | Pulls latest code from GitHub via `checkout scm` |
-| Install Dependencies | Runs `pip install -r requirements.txt` |
-| Lint | Checks code style with `flake8` |
-| Test | Executes `pytest test_app.py -v` |
-| Build Docker Image | Builds the Docker image as final validation |
-
-### How to configure Jenkins to connect to this repository
-
-1. Install Jenkins locally or use a Docker-based Jenkins server
-2. Install the following Jenkins plugins: **Git Plugin**, **Pipeline Plugin**
-3. Create a new **Pipeline** project in Jenkins
-4. Under **Pipeline → Definition** select **Pipeline script from SCM**
-5. Set SCM to **Git** and enter the repository URL:
-   `https://github.com/ihyth-alt/aceest-devops-project.git`
-6. Set the branch to `main`
-7. Jenkins automatically detects and uses the `Jenkinsfile` in the repo root
-8. Click **Build Now** to trigger a manual build
-
-### Jenkins and GitHub Integration Logic
-
-```
-Developer pushes code to GitHub
-        │
-        ▼
-GitHub notifies Jenkins via Webhook (or Jenkins polls GitHub)
-        │
-        ▼
-Jenkins pulls latest code from GitHub
-        │
-        ▼
-Jenkins runs Jenkinsfile pipeline stages:
-  1. Checkout → 2. Install → 3. Lint → 4. Test → 5. Docker Build
-        │
-        ▼
-BUILD SUCCESS / FAILURE reported in Jenkins dashboard
-```
-
-Jenkins acts as a controlled BUILD environment separate from the developer's
-machine, ensuring code integrates correctly before it reaches production.
-
----
-
-## Phase 6 — GitHub Actions CI/CD Pipeline
-
-The pipeline is defined in `.github/workflows/main.yml` and triggers
-automatically on every `push` or `pull_request` to the `main` branch.
-
-### Pipeline Stages
-
-| Stage | Tool | Description |
-|-------|------|-------------|
-| Checkout | `actions/checkout@v3` | Pulls the latest source code |
-| Set up Python | `actions/setup-python@v4` | Installs Python 3.11 on the runner |
-| Install Dependencies | pip | Installs all packages from `requirements.txt` |
-| Lint | flake8 | Checks for syntax and style errors in `app.py` |
-| Run Pytest | pytest | Executes all 35 unit tests |
-| Build Docker Image | docker | Builds the container to confirm it assembles correctly |
-
-### GitHub Actions Integration Logic
-
-```
-Every git push or pull_request to main branch
-        │
-        ▼
-GitHub Actions runner (ubuntu-latest) spins up
-        │
-        ▼
-Pipeline stages execute in sequence:
-  Checkout → Setup Python → Install → Lint → Test → Docker Build
-        │
-        ├── All stages pass → Green checkmark ✅ on commit
-        │
-        └── Any stage fails → Red X ❌ — push is flagged, team is notified
-```
-
-### How to view pipeline results
-1. Go to the repository on GitHub
-2. Click the **Actions** tab
-3. Every push shows a workflow run with green (pass) or red (fail) per stage
-4. Click any run to see detailed logs for each stage
-
----
-
-## Git Commit Convention
-
-All commits in this project follow a structured format:
-
-| Prefix | Meaning |
-|--------|---------|
-| `feat:` | New feature or version added |
-| `fix:` | Bug fix |
-| `test:` | Test added or updated |
-| `docker:` | Dockerfile or container change |
-| `ci:` | GitHub Actions or Jenkins update |
-| `docs:` | README or documentation update |
+Ihyth A — `ihyth-alt` on GitHub, `ihyth32` on Docker Hub.
