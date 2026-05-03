@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
 
@@ -56,6 +56,7 @@ PROGRAMS = {
 
 # ── Routes ───────────────────────────────────────────────────────────────────
 
+
 @app.route("/")
 def home():
     """Health check / welcome endpoint."""
@@ -64,6 +65,18 @@ def home():
         "status": "running",
         "version": "1.0"
     })
+
+
+@app.route("/ui")
+def ui_home():
+    """Serve the HTML UI for the rolling-update deployment."""
+    return render_template("index.html", strategy="rolling-update")
+
+
+@app.route("/ui/<path:strategy>")
+def ui_strategy(strategy):
+    """Serve the HTML UI tagged with the strategy that handled the request."""
+    return render_template("index.html", strategy=strategy)
 
 
 @app.route("/programs")
@@ -156,6 +169,21 @@ def add_client():
     }
 
     return jsonify({"message": "Client registered successfully", "client": client}), 201
+
+
+@app.route('/<path:strategy>')
+def strategy_route(strategy):
+    """Catch-all for K8s deployment strategy paths (blue-green, canary, etc.)"""
+    # If accessed via browser (Accept: html), serve the UI
+    if 'text/html' in request.headers.get('Accept', ''):
+        return render_template("index.html", strategy=strategy)
+    # Otherwise return JSON
+    return jsonify({
+        "message": "ACEest Fitness & Gym API",
+        "status": "running",
+        "version": "1.0",
+        "deployment_strategy": strategy
+    })
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────

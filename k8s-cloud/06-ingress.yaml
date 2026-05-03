@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aceest-ingress
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+spec:
+  defaultBackend:
+    service:
+      name: aceest-rolling-svc
+      port:
+        number: 80
+  rules:
+  - http:
+      paths:
+      - path: /blue-green
+        pathType: Prefix
+        backend:
+          service:
+            name: aceest-bg-svc
+            port:
+              number: 80
+      - path: /canary
+        pathType: Prefix
+        backend:
+          service:
+            name: aceest-canary-svc
+            port:
+              number: 80
+      - path: /ab-test
+        pathType: Prefix
+        backend:
+          service:
+            name: aceest-ab-svc
+            port:
+              number: 80
+      - path: /shadow
+        pathType: Prefix
+        backend:
+          service:
+            name: aceest-prod-svc
+            port:
+              number: 80

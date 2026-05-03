@@ -1,0 +1,719 @@
+Started by user Ihyth A
+Obtained Jenkinsfile from git https://github.com/ihyth-alt/aceest-devops-project.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+using credential github-creds
+ > git.exe rev-parse --resolve-git-dir C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline\.git # timeout=10
+Fetching changes from the remote Git repository
+ > git.exe config remote.origin.url https://github.com/ihyth-alt/aceest-devops-project.git # timeout=10
+Fetching upstream changes from https://github.com/ihyth-alt/aceest-devops-project.git
+ > git.exe --version # timeout=10
+ > git --version # 'git version 2.53.0.windows.2'
+using GIT_ASKPASS to set credentials GitHub for ihyth-alt
+ > git.exe fetch --tags --force --progress -- https://github.com/ihyth-alt/aceest-devops-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git.exe rev-parse "refs/remotes/origin/main^{commit}" # timeout=10
+Checking out Revision 6ca96d3658fee33d02bf6a780c47566a198988df (refs/remotes/origin/main)
+ > git.exe config core.sparsecheckout # timeout=10
+ > git.exe checkout -f 6ca96d3658fee33d02bf6a780c47566a198988df # timeout=10
+Commit message: "fix: remove empty tools block from Jenkinsfile"
+ > git.exe rev-list --no-walk 6ca96d3658fee33d02bf6a780c47566a198988df # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+using credential github-creds
+ > git.exe rev-parse --resolve-git-dir C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline\.git # timeout=10
+Fetching changes from the remote Git repository
+ > git.exe config remote.origin.url https://github.com/ihyth-alt/aceest-devops-project.git # timeout=10
+Fetching upstream changes from https://github.com/ihyth-alt/aceest-devops-project.git
+ > git.exe --version # timeout=10
+ > git --version # 'git version 2.53.0.windows.2'
+using GIT_ASKPASS to set credentials GitHub for ihyth-alt
+ > git.exe fetch --tags --force --progress -- https://github.com/ihyth-alt/aceest-devops-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git.exe rev-parse "refs/remotes/origin/main^{commit}" # timeout=10
+Checking out Revision 6ca96d3658fee33d02bf6a780c47566a198988df (refs/remotes/origin/main)
+ > git.exe config core.sparsecheckout # timeout=10
+ > git.exe checkout -f 6ca96d3658fee33d02bf6a780c47566a198988df # timeout=10
+Commit message: "fix: remove empty tools block from Jenkinsfile"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Install Dependencies)
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline>pip install -r requirements.txt 
+Requirement already satisfied: flask==3.0.3 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from -r requirements.txt (line 1)) (3.0.3)
+Requirement already satisfied: pytest==8.2.2 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from -r requirements.txt (line 2)) (8.2.2)
+Requirement already satisfied: pytest-cov==4.1.0 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from -r requirements.txt (line 3)) (4.1.0)
+Requirement already satisfied: Werkzeug>=3.0.0 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from flask==3.0.3->-r requirements.txt (line 1)) (3.1.8)
+Requirement already satisfied: Jinja2>=3.1.2 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from flask==3.0.3->-r requirements.txt (line 1)) (3.1.6)
+Requirement already satisfied: itsdangerous>=2.1.2 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from flask==3.0.3->-r requirements.txt (line 1)) (2.2.0)
+Requirement already satisfied: click>=8.1.3 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from flask==3.0.3->-r requirements.txt (line 1)) (8.3.2)
+Requirement already satisfied: blinker>=1.6.2 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from flask==3.0.3->-r requirements.txt (line 1)) (1.9.0)
+Requirement already satisfied: iniconfig in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from pytest==8.2.2->-r requirements.txt (line 2)) (2.3.0)
+Requirement already satisfied: packaging in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from pytest==8.2.2->-r requirements.txt (line 2)) (26.1)
+Requirement already satisfied: pluggy<2.0,>=1.5 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from pytest==8.2.2->-r requirements.txt (line 2)) (1.6.0)
+Requirement already satisfied: colorama in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from pytest==8.2.2->-r requirements.txt (line 2)) (0.4.6)
+Requirement already satisfied: coverage>=5.2.1 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from coverage[toml]>=5.2.1->pytest-cov==4.1.0->-r requirements.txt (line 3)) (7.13.5)
+Requirement already satisfied: MarkupSafe>=2.0 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from Jinja2>=3.1.2->flask==3.0.3->-r requirements.txt (line 1)) (3.0.3)
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Lint)
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline>pip install flake8 
+Requirement already satisfied: flake8 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (7.3.0)
+Requirement already satisfied: mccabe<0.8.0,>=0.7.0 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from flake8) (0.7.0)
+Requirement already satisfied: pycodestyle<2.15.0,>=2.14.0 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from flake8) (2.14.0)
+Requirement already satisfied: pyflakes<3.5.0,>=3.4.0 in C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages (from flake8) (3.4.0)
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline>flake8 app.py --max-line-length=120 --exit-zero 
+app.py:59:1: E302 expected 2 blank lines, found 1
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run Tests with Coverage)
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline>pytest test_app.py --cov=app --cov-report=xml --cov-report=term 
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-8.2.2, pluggy-1.6.0
+rootdir: C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline
+configfile: pytest.ini
+plugins: anyio-4.13.0, cov-4.1.0
+collected 35 items
+
+test_app.py ...................................                          [100%]
+
+---------- coverage: platform win32, python 3.13.3-final-0 -----------
+Name     Stmts   Miss  Cover
+----------------------------
+app.py      59      7    88%
+----------------------------
+TOTAL       59      7    88%
+Coverage XML written to file coverage.xml
+
+
+============================= 35 passed in 0.76s ==============================
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (SonarQube Analysis)
+[Pipeline] withSonarQubeEnv
+Injecting SonarQube environment variables using the configuration: SonarQube
+[Pipeline] {
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline>sonar-scanner                         -Dsonar.projectKey=aceest-fitness                         -Dsonar.sources=app.py                         -Dsonar.tests=test_app.py                         -Dsonar.python.coverage.reportPaths=coverage.xml 
+19:09:41.429 INFO  Scanner configuration file: C:\sonar-scanner-8.0.1.6346-windows-x64\bin\..\conf\sonar-scanner.properties
+19:09:41.438 INFO  Project root configuration file: C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline\sonar-project.properties
+19:09:41.460 INFO  SonarScanner CLI 8.0.1.6346
+19:09:41.473 INFO  Windows 11 10.0 amd64
+19:09:47.844 INFO  Communicating with SonarQube Server 9.9.8.100196
+19:09:49.193 INFO  Load global settings
+19:09:49.424 INFO  Load global settings (done) | time=235ms
+19:09:49.429 INFO  Server id: 147B411E-AZ3EjqixBIB4ppwnCUy0
+19:09:49.442 INFO  User cache: C:\WINDOWS\system32\config\systemprofile\.sonar\cache
+19:09:49.451 INFO  Load/download plugins
+19:09:49.451 INFO  Load plugins index
+19:09:49.581 INFO  Load plugins index (done) | time=130ms
+19:09:49.828 INFO  Load/download plugins (done) | time=378ms
+19:09:51.034 INFO  Process project properties
+19:09:51.076 INFO  Process project properties (done) | time=42ms
+19:09:51.084 INFO  Execute project builders
+19:09:51.089 INFO  Execute project builders (done) | time=5ms
+19:09:51.089 INFO  Project key: aceest-fitness
+19:09:51.100 INFO  Base dir: C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline
+19:09:51.100 INFO  Working dir: C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline\.scannerwork
+19:09:51.111 INFO  Load project settings for component key: 'aceest-fitness'
+19:09:51.148 INFO  Load project settings for component key: 'aceest-fitness' (done) | time=37ms
+19:09:51.407 INFO  Auto-configuring with CI 'Jenkins'
+19:09:51.418 INFO  Load quality profiles
+19:09:51.551 INFO  Load quality profiles (done) | time=133ms
+19:09:51.575 INFO  Load active rules
+19:09:55.099 INFO  Load active rules (done) | time=3524ms
+19:09:55.101 INFO  Load analysis cache
+19:09:55.140 INFO  Load analysis cache (4.8 kB) | time=39ms
+19:09:55.275 INFO  Load project repositories
+19:09:55.313 INFO  Load project repositories (done) | time=38ms
+19:09:55.389 INFO  Indexing files...
+19:09:55.399 INFO  Project configuration:
+19:09:55.399 INFO    Excluded sources: **/__pycache__/**, **/htmlcov/**, **/.pytest_cache/**
+19:09:55.790 INFO  2 files indexed
+19:09:55.790 INFO  0 files ignored because of inclusion/exclusion patterns
+19:09:55.790 INFO  0 files ignored because of scm ignore settings
+19:09:55.790 INFO  Quality profile for py: Sonar way
+19:09:55.790 INFO  ------------- Run sensors on module ACEest Fitness
+19:09:56.050 INFO  Load metrics repository
+19:09:56.106 INFO  Load metrics repository (done) | time=56ms
+19:09:59.418 INFO  Sensor Python Sensor [python]
+19:09:59.441 WARN  No explicit support for version 3.11. Python version has been set to 3.10.
+19:09:59.451 INFO  Starting global symbols computation
+19:09:59.451 INFO  1 source file to be analyzed
+19:09:59.983 INFO  1/1 source file has been analyzed
+19:10:00.036 INFO  Starting rules execution
+19:10:00.036 INFO  2 source files to be analyzed
+19:10:00.614 INFO  2/2 source files have been analyzed
+19:10:00.614 INFO  The Python analyzer was able to leverage cached data from previous analyses for 0 out of 2 files. These files were not parsed.
+19:10:00.614 INFO  Sensor Python Sensor [python] (done) | time=1196ms
+19:10:00.614 INFO  Sensor Cobertura Sensor for Python coverage [python]
+19:10:00.653 INFO  Python test coverage
+19:10:00.670 INFO  Parsing report 'C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline\coverage.xml'
+19:10:00.834 INFO  Sensor Cobertura Sensor for Python coverage [python] (done) | time=220ms
+19:10:00.834 INFO  Sensor PythonXUnitSensor [python]
+19:10:00.868 INFO  Sensor PythonXUnitSensor [python] (done) | time=34ms
+19:10:00.868 INFO  Sensor JaCoCo XML Report Importer [jacoco]
+19:10:00.868 INFO  'sonar.coverage.jacoco.xmlReportPaths' is not defined. Using default locations: target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml,build/reports/jacoco/test/jacocoTestReport.xml
+19:10:00.868 INFO  No report imported, no coverage information will be imported by JaCoCo XML Report Importer
+19:10:00.868 INFO  Sensor JaCoCo XML Report Importer [jacoco] (done) | time=0ms
+19:10:00.868 INFO  Sensor CSS Rules [javascript]
+19:10:00.868 INFO  No CSS, PHP, HTML or VueJS files are found in the project. CSS analysis is skipped.
+19:10:00.868 INFO  Sensor CSS Rules [javascript] (done) | time=0ms
+19:10:00.868 INFO  Sensor C# Project Type Information [csharp]
+19:10:00.868 INFO  Sensor C# Project Type Information [csharp] (done) | time=0ms
+19:10:00.868 INFO  Sensor C# Analysis Log [csharp]
+19:10:00.901 INFO  Sensor C# Analysis Log [csharp] (done) | time=33ms
+19:10:00.901 INFO  Sensor C# Properties [csharp]
+19:10:00.901 INFO  Sensor C# Properties [csharp] (done) | time=0ms
+19:10:00.901 INFO  Sensor HTML [web]
+19:10:00.901 INFO  Sensor HTML [web] (done) | time=0ms
+19:10:00.901 INFO  Sensor TextAndSecretsSensor [text]
+19:10:00.926 INFO  2 source files to be analyzed
+19:10:00.951 INFO  2/2 source files have been analyzed
+19:10:00.951 INFO  Sensor TextAndSecretsSensor [text] (done) | time=50ms
+19:10:00.951 INFO  Sensor VB.NET Project Type Information [vbnet]
+19:10:00.951 INFO  Sensor VB.NET Project Type Information [vbnet] (done) | time=0ms
+19:10:00.951 INFO  Sensor VB.NET Analysis Log [vbnet]
+19:10:00.993 INFO  Sensor VB.NET Analysis Log [vbnet] (done) | time=42ms
+19:10:00.993 INFO  Sensor VB.NET Properties [vbnet]
+19:10:00.993 INFO  Sensor VB.NET Properties [vbnet] (done) | time=0ms
+19:10:00.993 INFO  Sensor IaC Docker Sensor [iac]
+19:10:01.000 INFO  0 source files to be analyzed
+19:10:01.130 INFO  0/0 source files have been analyzed
+19:10:01.130 INFO  Sensor IaC Docker Sensor [iac] (done) | time=137ms
+19:10:01.134 INFO  ------------- Run sensors on project
+19:10:01.234 INFO  Sensor Analysis Warnings import [csharp]
+19:10:01.234 INFO  Sensor Analysis Warnings import [csharp] (done) | time=0ms
+19:10:01.234 INFO  Sensor Zero Coverage Sensor
+19:10:01.234 INFO  Sensor Zero Coverage Sensor (done) | time=0ms
+19:10:01.250 INFO  CPD Executor Calculating CPD for 1 file
+19:10:01.268 INFO  CPD Executor CPD calculation finished (done) | time=18ms
+19:10:01.373 INFO  Analysis report generated in 91ms, dir size=151.8 kB
+19:10:01.506 INFO  Analysis report compressed in 133ms, zip size=29.0 kB
+19:10:01.636 INFO  Analysis report uploaded in 120ms
+19:10:01.639 INFO  ANALYSIS SUCCESSFUL, you can find the results at: http://localhost:9000/dashboard?id=aceest-fitness
+19:10:01.639 INFO  Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+19:10:01.639 INFO  More about the report processing at http://localhost:9000/api/ce/task?id=AZ3E3mGjBIB4ppwnCesT
+19:10:01.651 INFO  Analysis total time: 11.579 s
+19:10:01.651 INFO  EXECUTION SUCCESS
+19:10:01.651 INFO  Total time: 20.290s
+[Pipeline] }
+[Pipeline] // withSonarQubeEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Quality Gate)
+[Pipeline] timeout
+Timeout set to expire in 5 min 0 sec
+[Pipeline] {
+[Pipeline] waitForQualityGate
+Checking status of SonarQube task 'AZ3E3mGjBIB4ppwnCesT' on server 'SonarQube'
+SonarQube task 'AZ3E3mGjBIB4ppwnCesT' status is 'IN_PROGRESS'
+SonarQube task 'AZ3E3mGjBIB4ppwnCesT' status is 'SUCCESS'
+SonarQube task 'AZ3E3mGjBIB4ppwnCesT' completed. Quality gate is 'OK'
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Docker Image)
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline>docker build -t ihyth32/aceest-fitness:v4.5 . 
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile:
+#1 transferring dockerfile: 483B 0.1s done
+#1 DONE 0.7s
+
+#2 [internal] load metadata for docker.io/library/python:3.11-slim
+#2 DONE 2.9s
+
+#3 [internal] load .dockerignore
+#3 transferring context:
+#3 transferring context: 2B done
+#3 DONE 0.7s
+
+#4 [1/5] FROM docker.io/library/python:3.11-slim@sha256:6d85378d88a19cd4d76079817532d62232be95757cb45945a99fec8e8084b9c2
+#4 resolve docker.io/library/python:3.11-slim@sha256:6d85378d88a19cd4d76079817532d62232be95757cb45945a99fec8e8084b9c2
+#4 resolve docker.io/library/python:3.11-slim@sha256:6d85378d88a19cd4d76079817532d62232be95757cb45945a99fec8e8084b9c2 0.6s done
+#4 DONE 0.7s
+
+#5 [internal] load build context
+#5 transferring context: 226.46kB 0.8s done
+#5 DONE 1.8s
+
+#6 [2/5] WORKDIR /app
+#6 CACHED
+
+#7 [3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [5/5] COPY . .
+#9 DONE 1.4s
+
+#10 exporting to image
+#10 exporting layers
+#10 exporting layers 1.4s done
+#10 exporting manifest sha256:08ca43ddd3ee28e58628c460d59275953be43377982b3e10c0d04d56d763f5b3
+#10 exporting manifest sha256:08ca43ddd3ee28e58628c460d59275953be43377982b3e10c0d04d56d763f5b3 0.3s done
+#10 exporting config sha256:68fded3fe39192c1279a7382f83ead83dca5d514955730cca96b4a3fb22038fe
+#10 exporting config sha256:68fded3fe39192c1279a7382f83ead83dca5d514955730cca96b4a3fb22038fe 0.3s done
+#10 exporting attestation manifest sha256:1545e6de0e871439f4e4dbe5f52d23897c63ab9431a2fda8b4ad8913c690d15c
+#10 exporting attestation manifest sha256:1545e6de0e871439f4e4dbe5f52d23897c63ab9431a2fda8b4ad8913c690d15c 0.7s done
+#10 exporting manifest list sha256:bbe99f591aa969b24f4f0b9cfd94f667462b06a75b9417854384d21b0edf1dbe
+#10 exporting manifest list sha256:bbe99f591aa969b24f4f0b9cfd94f667462b06a75b9417854384d21b0edf1dbe 0.4s done
+#10 naming to docker.io/ihyth32/aceest-fitness:v4.5
+#10 naming to docker.io/ihyth32/aceest-fitness:v4.5 0.0s done
+#10 unpacking to docker.io/ihyth32/aceest-fitness:v4.5
+#10 unpacking to docker.io/ihyth32/aceest-fitness:v4.5 0.8s done
+#10 DONE 4.2s
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline>docker tag ihyth32/aceest-fitness:v4.5 ihyth32/aceest-fitness:latest 
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push to Docker Hub)
+[Pipeline] withCredentials
+Masking supported pattern matches of %DOCKER_PASS%
+[Pipeline] {
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline>echo ****   | docker login -u ihyth32 --password-stdin 
+Login Succeeded
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline>docker push ihyth32/aceest-fitness:v4.5 
+The push refers to repository [docker.io/ihyth32/aceest-fitness]
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+3531af2bc2a9: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+3531af2bc2a9: Waiting
+3531af2bc2a9: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+3531af2bc2a9: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+3531af2bc2a9: Waiting
+3531af2bc2a9: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+3531af2bc2a9: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+3531af2bc2a9: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+3531af2bc2a9: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+3531af2bc2a9: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3531af2bc2a9: Waiting
+3531af2bc2a9: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3531af2bc2a9: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+3531af2bc2a9: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+3fb591754928: Layer already exists
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+3531af2bc2a9: Layer already exists
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+d346ff8f6d1b: Waiting
+d346ff8f6d1b: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Layer already exists
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+d346ff8f6d1b: Waiting
+d346ff8f6d1b: Waiting
+7ccd73948dde: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+f3ba2250c524: Waiting
+d346ff8f6d1b: Waiting
+7ccd73948dde: Layer already exists
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+b9b05a6e24c3: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Layer already exists
+d346ff8f6d1b: Layer already exists
+ec9628302bbd: Layer already exists
+70f2a475e353: Waiting
+70f2a475e353: Waiting
+70f2a475e353: Waiting
+b9b05a6e24c3: Pushed
+70f2a475e353: Pushed
+v4.5: digest: sha256:bbe99f591aa969b24f4f0b9cfd94f667462b06a75b9417854384d21b0edf1dbe size: 856
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline>docker push ihyth32/aceest-fitness:latest 
+The push refers to repository [docker.io/ihyth32/aceest-fitness]
+70f2a475e353: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+b9b05a6e24c3: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+70f2a475e353: Waiting
+7ccd73948dde: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+f3ba2250c524: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+70f2a475e353: Waiting
+7ccd73948dde: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+f3ba2250c524: Waiting
+70f2a475e353: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+b9b05a6e24c3: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+70f2a475e353: Waiting
+7ccd73948dde: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+f3ba2250c524: Waiting
+91ff8760033c: Waiting
+70f2a475e353: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+b9b05a6e24c3: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+b9b05a6e24c3: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+70f2a475e353: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+70f2a475e353: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+b9b05a6e24c3: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+70f2a475e353: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+70f2a475e353: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+b9b05a6e24c3: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+b9b05a6e24c3: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+70f2a475e353: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+b9b05a6e24c3: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+70f2a475e353: Layer already exists
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+b9b05a6e24c3: Already exists
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+7ccd73948dde: Waiting
+3531af2bc2a9: Waiting
+d346ff8f6d1b: Waiting
+91ff8760033c: Waiting
+f3ba2250c524: Waiting
+3fb591754928: Waiting
+ec9628302bbd: Waiting
+f3ba2250c524: Layer already exists
+3fb591754928: Layer already exists
+ec9628302bbd: Layer already exists
+91ff8760033c: Layer already exists
+7ccd73948dde: Layer already exists
+3531af2bc2a9: Layer already exists
+d346ff8f6d1b: Layer already exists
+latest: digest: sha256:bbe99f591aa969b24f4f0b9cfd94f667462b06a75b9417854384d21b0edf1dbe size: 856
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\aceest-fitness-pipeline>docker logout 
+Removing login credentials for https://index.docker.io/v1/
+[Pipeline] echo
+Build 5 successful. Image: ihyth32/aceest-fitness:v4.5
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

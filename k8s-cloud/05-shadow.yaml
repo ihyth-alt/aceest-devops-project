@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aceest-prod
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: aceest-shadow
+      role: production
+  template:
+    metadata:
+      labels:
+        app: aceest-shadow
+        role: production
+    spec:
+      containers:
+      - name: aceest
+        image: ihyth32/aceest-fitness:v4.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        resources:
+          requests: { memory: "128Mi", cpu: "100m" }
+          limits: { memory: "256Mi", cpu: "300m" }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aceest-shadow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aceest-shadow
+      role: shadow
+  template:
+    metadata:
+      labels:
+        app: aceest-shadow
+        role: shadow
+    spec:
+      containers:
+      - name: aceest
+        image: ihyth32/aceest-fitness:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        resources:
+          requests: { memory: "128Mi", cpu: "100m" }
+          limits: { memory: "256Mi", cpu: "300m" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aceest-prod-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: aceest-shadow
+    role: production
+  ports:
+  - port: 80
+    targetPort: 5000

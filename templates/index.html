@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACEest Fitness & Gym</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1a1a1a; color: #ffffff; min-height: 100vh;
+      padding: 20px; line-height: 1.5;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    .brand-bar {
+      background: #d4af37; padding: 20px 24px; border-radius: 8px;
+      margin-bottom: 20px; display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .brand-text h1 {
+      font-size: 24px; font-weight: 600; color: #1a1a1a; letter-spacing: 0.5px;
+    }
+    .brand-text p { font-size: 12px; color: #4A1B0C; margin-top: 4px; }
+    .strategy-badge {
+      background: #1a1a1a; padding: 8px 14px; border-radius: 8px;
+      font-size: 12px; display: flex; gap: 6px; align-items: center;
+    }
+    .badge-label { color: #999; }
+    .badge-value { color: #d4af37; font-weight: 500; }
+    .card {
+      background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 16px;
+    }
+    .card h2 {
+      color: #d4af37; font-size: 16px; font-weight: 500; margin-bottom: 14px;
+    }
+    .form-row { display: grid; gap: 12px; margin-bottom: 14px; }
+    .form-row.two-col { grid-template-columns: 1fr 1fr; }
+    .form-group label {
+      font-size: 11px; color: #999; display: block; margin-bottom: 4px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .form-group input, .form-group select {
+      width: 100%; background: #1a1a1a; color: #fff;
+      padding: 10px 12px; border: 1px solid #444; border-radius: 6px;
+      font-size: 13px; font-family: inherit;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none; border-color: #d4af37;
+    }
+    .btn-gold {
+      background: #d4af37; color: #1a1a1a; padding: 10px 22px;
+      border: none; border-radius: 6px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-gold:hover { background: #b8961f; }
+    .btn-gold:active { transform: scale(0.98); }
+    .result-box {
+      margin-top: 14px; padding: 12px 14px; background: #1a1a1a;
+      border-left: 3px solid #2ecc71; border-radius: 4px;
+    }
+    .result-box.error { border-left-color: #e74c3c; }
+    .result-box.success { border-left-color: #2ecc71; }
+    .result-label {
+      font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .result-value {
+      font-size: 20px; color: #2ecc71; font-weight: 600; margin-top: 4px;
+    }
+    .result-box.error .result-value { color: #e74c3c; }
+    .programs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .program-card { background: #1a1a1a; padding: 14px; border-radius: 6px; }
+    .program-fl { border-left: 3px solid #e74c3c; }
+    .program-mg { border-left: 3px solid #2ecc71; }
+    .program-bg { border-left: 3px solid #3498db; }
+    .program-name { font-size: 13px; font-weight: 600; color: #fff; }
+    .program-meta { font-size: 11px; color: #999; margin-top: 4px; }
+    .footer {
+      text-align: center; padding: 20px 0 10px; font-size: 11px; color: #666;
+      display: flex; justify-content: center; gap: 10px;
+    }
+    @media (max-width: 600px) {
+      .form-row.two-col { grid-template-columns: 1fr; }
+      .programs-grid { grid-template-columns: 1fr; }
+      .brand-bar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header class="brand-bar">
+      <div class="brand-text">
+        <h1>ACEest FITNESS &amp; GYM</h1>
+        <p>Functional Training • Performance • Nutrition</p>
+      </div>
+      <div class="strategy-badge">
+        <span class="badge-label">Served by:</span>
+        <span class="badge-value" id="strategy-badge">{{ strategy }}</span>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Calorie Calculator</h2>
+      <div class="form-row two-col">
+        <div class="form-group">
+          <label for="program-select">Program</label>
+          <select id="program-select">
+            <option value="Fat Loss (FL)">Fat Loss (FL)</option>
+            <option value="Muscle Gain (MG)">Muscle Gain (MG)</option>
+            <option value="Beginner (BG)">Beginner (BG)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="weight-input">Weight (kg)</label>
+          <input type="number" id="weight-input" min="1" step="0.1" placeholder="70">
+        </div>
+      </div>
+      <button class="btn-gold" onclick="calculateCalories()">Calculate</button>
+      <div class="result-box" id="calc-result" style="display:none;">
+        <div class="result-label">Estimated daily calories</div>
+        <div class="result-value" id="calc-value">0 kcal</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Programs</h2>
+      <div class="programs-grid">
+        <div class="program-card program-fl">
+          <div class="program-name">Fat Loss</div>
+          <div class="program-meta">22 kcal/kg</div>
+        </div>
+        <div class="program-card program-mg">
+          <div class="program-name">Muscle Gain</div>
+          <div class="program-meta">35 kcal/kg</div>
+        </div>
+        <div class="program-card program-bg">
+          <div class="program-name">Beginner</div>
+          <div class="program-meta">26 kcal/kg</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Register Client</h2>
+      <div class="form-row two-col">
+        <div class="form-group">
+          <label for="client-name">Name</label>
+          <input type="text" id="client-name" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+          <label for="client-age">Age</label>
+          <input type="number" id="client-age" min="1" placeholder="25">
+        </div>
+      </div>
+      <div class="form-row two-col">
+        <div class="form-group">
+          <label for="client-weight">Weight (kg)</label>
+          <input type="number" id="client-weight" min="1" step="0.1" placeholder="70">
+        </div>
+        <div class="form-group">
+          <label for="client-program">Program</label>
+          <select id="client-program">
+            <option value="Fat Loss (FL)">Fat Loss (FL)</option>
+            <option value="Muscle Gain (MG)">Muscle Gain (MG)</option>
+            <option value="Beginner (BG)">Beginner (BG)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-gold" onclick="registerClient()">Register</button>
+      <div class="result-box success" id="reg-result" style="display:none;">
+        <div class="result-label">Status</div>
+        <div class="result-value" id="reg-value"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>API Version 1.0</span>
+      <span>•</span>
+      <span>Deployed on Kubernetes</span>
+    </footer>
+
+  </div>
+
+  <script>
+    async function calculateCalories() {
+      const program = document.getElementById('program-select').value;
+      const weight = parseFloat(document.getElementById('weight-input').value);
+      const resultBox = document.getElementById('calc-result');
+      const resultValue = document.getElementById('calc-value');
+      if (!weight || weight <= 0) {
+        resultBox.style.display = 'block';
+        resultBox.className = 'result-box error';
+        resultValue.textContent = 'Please enter a valid weight';
+        return;
+      }
+      try {
+        const response = await fetch('/calculate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ program: program, weight: weight })
+        });
+        const data = await response.json();
+        resultBox.style.display = 'block';
+        if (response.ok) {
+          resultBox.className = 'result-box success';
+          resultValue.textContent = data.estimated_calories.toLocaleString() + ' kcal';
+        } else {
+          resultBox.className = 'result-box error';
+          resultValue.textContent = data.error || 'Calculation failed';
+        }
+      } catch (err) {
+        resultBox.style.display = 'block';
+        resultBox.className = 'result-box error';
+        resultValue.textContent = 'Network error: ' + err.message;
+      }
+    }
+
+    async function registerClient() {
+      const name = document.getElementById('client-name').value;
+      const age = document.getElementById('client-age').value;
+      const weight = document.getElementById('client-weight').value;
+      const program = document.getElementById('client-program').value;
+      const resultBox = document.getElementById('reg-result');
+      const resultValue = document.getElementById('reg-value');
+      if (!name) {
+        resultBox.style.display = 'block';
+        resultBox.className = 'result-box error';
+        resultValue.textContent = 'Name is required';
+        return;
+      }
+      try {
+        const response = await fetch('/clients', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, age: age, weight: weight, program: program })
+        });
+        const data = await response.json();
+        resultBox.style.display = 'block';
+        if (response.ok) {
+          resultBox.className = 'result-box success';
+          resultValue.textContent = 'Registered: ' + data.client.name + ' (' + data.client.estimated_calories + ' kcal/day)';
+        } else {
+          resultBox.className = 'result-box error';
+          resultValue.textContent = data.error || 'Registration failed';
+        }
+      } catch (err) {
+        resultBox.style.display = 'block';
+        resultBox.className = 'result-box error';
+        resultValue.textContent = 'Network error: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
